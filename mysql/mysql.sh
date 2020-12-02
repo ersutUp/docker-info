@@ -43,7 +43,7 @@ fi
 is_run=`docker ps -a --filter name=${CONTAINER_NAME} --format "{{.Names}}"`
 if [ "${CONTAINER_NAME}" != "${is_run}" ]; then
 	#运行数据库
-	docker run -d --restart=always --name ${CONTAINER_NAME} -p ${port}:3306 -v ${data}:/var/lib/mysql -v ${conf}:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=${pass} ${image}
+	docker run -d --restart=always --name ${CONTAINER_NAME} -p ${port}:3306 -v ${data}:/var/lib/mysql -v ${conf}:/etc/mysql/conf.d -v /etc/localtime:/etc/localtime -e MYSQL_ROOT_PASSWORD=${pass} ${image}
 else
 	#重启数据库
 	docker restart ${CONTAINER_NAME}
