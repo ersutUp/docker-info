@@ -1,0 +1,24 @@
+FROM centos:centos7
+
+WORKDIR /opt
+
+#http://jaist.dl.sourceforge.net/project/pcre/pcre/8.33/pcre-8.33.tar.gz
+#https://codeload.github.com/winshining/nginx-http-flv-module/tar.gz/v1.2.8
+#http://nginx.org/download/nginx-1.18.0.tar.gz
+COPY nginx-1.18.0.tar.gz nginx-http-flv-module-1.2.8.tar.gz pcre-8.33.tar.gz ./
+
+RUN yum -y install make zlib zlib-devel gcc gcc-c++ libtool  openssl openssl-devel && \
+	tar -zxvf pcre-8.33.tar.gz -C /usr/local/ && \
+	tar -zxvf nginx-1.18.0.tar.gz -C /usr/local/ && \
+	tar -zxvf nginx-http-flv-module-1.2.8.tar.gz -C /tmp/ && \
+	rm pcre-8.33.tar.gz nginx-http-flv-module-1.2.8.tar.gz nginx-1.18.0.tar.gz && \
+	cd /usr/local/ && \
+	cd pcre-8.33 && \
+	./configure && make && make install && \
+	cd ../nginx-1.18.0 && \
+	./configure --user=nobody --group=nobody --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_gzip_static_module --with-http_realip_module --with-http_sub_module --with-http_ssl_module --add-module=/tmp/nginx-http-flv-module-1.2.8 &&\
+	make && make install
+	
+EXPOSE 80 443 1935
+
+CMD ["/usr/local/nginx/sbin/nginx","-g","daemon off;"]
