@@ -16,7 +16,7 @@ static_file=/data/zhiheiot/java/file
 container_name=zhihe-nginx
 #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑可修改部分↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 #镜像
-image="nginx-http-flv:v1.18_1.2.8"
+image="ersut/nginx-http-flv:v1.18_1.2.8"
 
 mkdir -p ${logs}
 mkdir -p ${conf}

@@ -10,7 +10,7 @@ static_file=/data/zhiheiot/java/file
 CONTAINER_NAME=zhihe-app
 #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑可修改部分↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 #镜像
-image="centos7-jdk8-ffmpeg:v1"
+image="ersut/centos7-jdk8-ffmpeg:v1"
 
 mkdir -p ${data}
 mkdir -p ${static_file}
