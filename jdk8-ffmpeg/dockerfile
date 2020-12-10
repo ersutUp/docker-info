@@ -24,7 +24,8 @@ RUN mkdir -p /usr/java && \
 	./configure --enable-shared --prefix=/usr/ffmpeg && make && make install && \
 	echo '/usr/ffmpeg/lib/' >> /etc/ld.so.conf && \
     ldconfig && \
-	mkdir -p /data
+	mkdir -p /data && \
+	echo "Asia/Shanghai" > /etc/timezone
 	
 
 ENV PATH $PATH:/usr/java/jdk1.8/jre/bin:/usr/java/jdk1.8/bin
