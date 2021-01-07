@@ -30,6 +30,10 @@ RUN mkdir -p /usr/java && \
 
 ENV PATH $PATH:/usr/java/jdk1.8/jre/bin:/usr/java/jdk1.8/bin
 ENV PATH $PATH:/usr/ffmpeg/bin
+#utf8编码
+ENV LANG en_US.UTF-8
+#时区
+ENV JAVA_OPTS -Duser.timezone=GMT+08
 
 WORKDIR /data
 
