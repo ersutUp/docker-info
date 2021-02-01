@@ -1,0 +1,34 @@
+FROM centos:centos7
+
+ENV GOROOT /usr/local/go
+ENV GOPATH /root/go
+ENV PATH $PATH:$GOROOT/bin
+ENV GOROOT_BOOTSTRAP /root/go1.4
+
+#https://github.com/golang/go/tree/release-branch.go1.4
+COPY go-release-branch.go1.4.zip $GOROOT_BOOTSTRAP/
+
+RUN yum install -y bison ed gawk gcc libc6-dev make unzip && \
+	mkdir -p $GOROOT && \
+	cd $GOROOT_BOOTSTRAP && echo `pwd` && \
+	unzip go-release-branch.go1.4.zip && mv $GOROOT_BOOTSTRAP/go-release-branch.go1.4/* $GOROOT_BOOTSTRAP/ && ls && \
+	#安装1.4版本的go
+	cd $GOROOT_BOOTSTRAP/src/ && pwd && ls && chmod 777 ./make.bash && ./make.bash && \
+	cd $GOROOT && \
+	url_prefix=https://dl.google.com/go/ && \
+	#根据cpu架构选择不同的版本
+	case "$(arch)" in \
+		 'x86_64') \
+			file_name=go1.15.7.linux-amd64.tar.gz; \
+			;; \
+		 'i386') \
+			file_name=go1.15.7.linux-386.tar.gz; \
+			;;\
+	esac && \
+	curl -O $url_prefix$file_name && \
+	tar -zxvf $file_name -C `cd $GOROOT && cd .. && pwd` && \
+	#安装1.15.7版本的go
+	cd $GOROOT/src/ && ./all.bash && \
+	rm -rf $GOROOT_BOOTSTRAP/go-release-branch.go1.4.zip
+
+CMD ["go","version"]
