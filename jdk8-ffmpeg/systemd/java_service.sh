@@ -23,6 +23,7 @@ stop(){
 
 start(){
 	stop
+	cd ${APP_PATH}
 	echo "开始启动"
 	rm -f ${APP_PATH}${APP_NAME}.pid
 	nohup ${JRE_HOME}/bin/java -jar ${APP_PATH}${APP_NAME}.jar > /dev/null &
