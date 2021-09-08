@@ -1,0 +1,13 @@
+[Unit]
+Description=springboot
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/java/java_servive.sh start
+ExecRestart=/opt/java/java_servive.sh start
+ExecStop=/opt/java/java_servive.sh stop
+
+
+[Install]
+WantedBy=multi-user.target
