@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=/opt/java/java_servive.sh start
-ExecRestart=/opt/java/java_servive.sh start
-ExecStop=/opt/java/java_servive.sh stop
+ExecStart=/opt/java/java_service.sh start
+ExecRestart=/opt/java/java_service.sh start
+ExecStop=/opt/java/java_service.sh stop
 
 
 [Install]
