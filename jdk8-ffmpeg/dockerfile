@@ -1,20 +1,25 @@
 FROM centos:centos7
 
-ENV JAVA_FOLDER_NAME jdk1.8.0_271
+ENV JAVA_FOLDER_NAME jdk1.8.0_131
 ENV JDK_HOME /usr/java/${JAVA_FOLDER_NAME}
 
+WORKDIR /tmp
+
 #https://download.oracle.com/otn/java/jdk/8u271-b09/61ae65e088624f5aaa0b1d2d801acb16/jdk-8u271-linux-x64.tar.gz
-COPY jdk-8u271-linux-x64.tar.gz /tmp/jdk.tar.gz
+#COPY jdk-8u271-linux-x64.tar.gz /tmp/jdk.tar.gz
 #http://www.ffmpeg.org/releases/ffmpeg-4.2.1.tar.gz
-COPY ffmpeg-4.2.1.tar.gz ./
+#COPY ffmpeg-4.2.1.tar.gz ./
 #http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
-COPY yasm-1.3.0.tar.gz ./
-RUN mkdir -p /usr/java && \
-	tar -xzf /tmp/jdk.tar.gz -C /usr/java && \
+#COPY yasm-1.3.0.tar.gz ./
+RUN yum -y install wget && \
+	wget -O yasm-1.3.0.tar.gz http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz && \
+	wget -O ffmpeg-4.2.1.tar.gz http://www.ffmpeg.org/releases/ffmpeg-4.2.1.tar.gz && \
+	wget -O jdk.tar.gz --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz && \
+	yum -y install gcc cc cl make && \
+	mkdir -p /usr/java && \
+	tar -xzf jdk.tar.gz -C /usr/java && \
 	chown -R root:root ${JDK_HOME} && \
 	ln -s ${JDK_HOME} /usr/java/jdk1.8 && \
-	rm /tmp/jdk.tar.gz && \
-	yum -y install gcc cc cl make && \
 	tar -xvf yasm-1.3.0.tar.gz && \
 	cd yasm-1.3.0/ && \
 	./configure && make && make install && \
@@ -27,7 +32,6 @@ RUN mkdir -p /usr/java && \
 	mkdir -p /data && \
 	echo "Asia/Shanghai" > /etc/timezone
 	
-
 ENV PATH $PATH:/usr/java/jdk1.8/jre/bin:/usr/java/jdk1.8/bin
 ENV PATH $PATH:/usr/ffmpeg/bin
 #utf8编码
@@ -35,6 +39,8 @@ ENV LANG en_US.UTF-8
 #时区
 ENV JAVA_OPTS -Duser.timezone=GMT+08
 
-WORKDIR /data
+WORKDIR /data/app
 
-CMD ["java","-jar","app.jar","--server.port=8080"]
+EXPOSE 8080
+
+CMD ["java","-jar","app.jar","--server.port=8080","--spring.profiles.active=product"]
