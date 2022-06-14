@@ -1,0 +1,11 @@
+[client] 
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4
+
+[mysqld]
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+init_connect='SET NAMES utf8mb4'
+character-set-server=utf8mb4
+lower_case_table_names = 1
