@@ -5,9 +5,16 @@ WORKDIR /opt
 #http://jaist.dl.sourceforge.net/project/pcre/pcre/8.33/pcre-8.33.tar.gz
 #https://codeload.github.com/winshining/nginx-http-flv-module/tar.gz/v1.2.8
 #http://nginx.org/download/nginx-1.18.0.tar.gz
-COPY nginx-1.18.0.tar.gz nginx-http-flv-module-1.2.8.tar.gz pcre-8.33.tar.gz ./
+#COPY nginx-1.18.0.tar.gz nginx-http-flv-module-1.2.8.tar.gz pcre-8.33.tar.gz ./
 
-RUN yum -y install make zlib zlib-devel gcc gcc-c++ libtool  openssl openssl-devel && \
+COPY clear_nginx.sh ./
+
+RUN yum -y install wget && \
+	wget -O pcre-8.33.tar.gz http://jaist.dl.sourceforge.net/project/pcre/pcre/8.33/pcre-8.33.tar.gz && \
+	wget -O nginx-http-flv-module-1.2.8.tar.gz https://codeload.github.com/winshining/nginx-http-flv-module/tar.gz/v1.2.8 && \
+	wget -O nginx-1.18.0.tar.gz http://nginx.org/download/nginx-1.18.0.tar.gz && \
+	yum -y install make zlib zlib-devel gcc gcc-c++ libtool openssl openssl-devel crontabs && \
+	echo '0 0 * * * /bin/sh /opt/clear_nginx.sh' >> /var/spool/cron/root && \
 	tar -zxvf pcre-8.33.tar.gz -C /usr/local/ && \
 	tar -zxvf nginx-1.18.0.tar.gz -C /usr/local/ && \
 	tar -zxvf nginx-http-flv-module-1.2.8.tar.gz -C /tmp/ && \
@@ -17,8 +24,10 @@ RUN yum -y install make zlib zlib-devel gcc gcc-c++ libtool  openssl openssl-dev
 	./configure && make && make install && \
 	cd ../nginx-1.18.0 && \
 	./configure --user=nobody --group=nobody --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_gzip_static_module --with-http_realip_module --with-http_sub_module --with-http_ssl_module --add-module=/tmp/nginx-http-flv-module-1.2.8 &&\
-	make && make install
+	make && make install && \
+	/bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+	echo "Asia/Shanghai" > /etc/timezone
 	
 EXPOSE 80 443 1935
 
-CMD ["/usr/local/nginx/sbin/nginx","-g","daemon off;"]
+CMD ["sh","-c","/usr/sbin/crond start | /usr/local/nginx/sbin/nginx -g 'daemon off;'"]
