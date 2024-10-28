@@ -1,12 +1,12 @@
 -- -------------------------------- The script used when storeMode is 'db' --------------------------------
 
-DROP DATABASE IF EXISTS `seata`;
+DROP DATABASE IF EXISTS `seata-server`;
 
-CREATE DATABASE `seata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE `seata-server` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 SET NAMES utf8mb4;
 
-USE `seata`;
+USE `seata-server`;
 
 -- the table to store GlobalSession data
 CREATE TABLE IF NOT EXISTS `global_table`
