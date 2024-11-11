@@ -1,0 +1,17 @@
+version : '3.8'
+services:
+  sentinel:
+    container_name: sentinel-${SENTINEL_VERSION}
+    build:
+      context: ./
+      args:
+        - SENTINEL_VERSION=${SENTINEL_VERSION}
+    image: sentinel-${SENTINEL_VERSION}
+    restart: always
+    ports:
+      - "38881:8080"
+    volumes:
+      - ./logs:/home/logs
+    environment:
+      TZ: "$TZ"
+      PORT: 8888
