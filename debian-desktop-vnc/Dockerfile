@@ -2,10 +2,7 @@ FROM debian:12.10
 
 COPY root /
 
-RUN echo "deb http://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware" >  /etc/apt/sources.list \
-    && echo "deb http://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware" >>  /etc/apt/sources.list \
-    && echo "deb http://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-backports main contrib non-free non-free-firmware" >>  /etc/apt/sources.list \
-    && echo "deb http://mirrors.tuna.tsinghua.edu.cn/debian-security bookworm-security main contrib non-free non-free-firmware" >>  /etc/apt/sources.list 
+# gnupg2  software-properties-common xz-utils
 
 RUN apt-get update && apt-get install -y \
     curl wget supervisor \
@@ -21,6 +18,11 @@ RUN apt-get install -y ttf-wqy-microhei locales procps vim \
     && sed -ie 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen
 
+# xterm
+#运行exe
+#RUN apt-get update && apt-get install -y \
+#    xdotool
+
 
 # tini to fix subreap
 ARG TINI_VERSION=v0.18.0
@@ -34,3 +36,4 @@ ENV LANG=zh_CN.UTF-8 \
 EXPOSE 8080
 
 ENTRYPOINT [ "/startup.sh" ]
+
