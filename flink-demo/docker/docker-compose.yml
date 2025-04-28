@@ -1,0 +1,36 @@
+version: "2.2"
+services:
+  filnk-rocketmq:
+    image: filnk-rocketmq
+#    build: ./
+    ports:
+      - "8081:8081"
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        taskmanager.numberOfTaskSlots: 7
+        taskmanager.memory.process.size: 8192m
+        parallelism.default: 2
+
+#version: "3.8"
+#services:
+#  jobmanager:
+#    image: flink:1.19.2
+#    ports:
+#      - "8081:8081"    # Web UI
+#      - "6123:6123"    # RPC
+#    command: jobmanager
+#    environment:
+#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+#    volumes:
+#      - ./checkpoints:/opt/flink/checkpoints  # 持久化检查点
+#
+#  taskmanager:
+#    image: flink:1.19.2
+#    depends_on:
+#      - jobmanager
+#    command: taskmanager
+#    environment:
+#      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+#    deploy:
+#      replicas: 2     # 启动 2 个 TaskManager
