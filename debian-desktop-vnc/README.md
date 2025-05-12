@@ -1,3 +1,5 @@
+**放弃该 dockerfile 使用linuxserver的**
+
 ```shell
-docker pull registry.cn-beijing.aliyuncs.com/ersut/debian-desktop-vnc
+docker pull ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 ```
