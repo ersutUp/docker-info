@@ -1,0 +1,7 @@
+version: "2.2"
+services:
+  vnc:
+    image: wine-kasmvnc
+    build: ./
+    ports:
+      - "3000:3000"
