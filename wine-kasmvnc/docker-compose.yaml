@@ -1,7 +1,9 @@
 version: "2.2"
 services:
   vnc:
-    image: wine-kasmvnc
+    image: ghcr.io/ersutup/wine-kasmvnc
     build: ./
     ports:
       - "3000:3000"
+    volumes:
+      - /usr/share/fonts:/usr/share/fonts
