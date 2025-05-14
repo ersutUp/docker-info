@@ -42,7 +42,7 @@ RUN echo "****** start xvnc ******" \
     && echo "****** init wine config ******" \
     && sudo chown abc:abc /config \
     && sudo chmod +x ~/shell/*.sh \
-    && sudo -u abc ~/shell/init-wine.sh \
+    && sudo -u abc ~/shell/init-winecfg.sh \
     # 安装中文字体 等
     && winetricks corefonts gdiplus riched20 riched30 wenquanyi \
     && regedit ~/chn_fonts.reg
