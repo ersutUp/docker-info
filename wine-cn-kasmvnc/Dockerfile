@@ -1,26 +1,3 @@
-FROM ubuntu:24.04 AS fonts
-# 安装所有必要的字体包
-RUN apt-get update && \
-    apt-get install -y \
-        # 基础字体工具
-        fontconfig \
-        # 中文/东亚字体
-        fonts-wqy-zenhei \
-        fonts-wqy-microhei \
-        fonts-noto-cjk \
-        fonts-arphic-ukai \
-        fonts-arphic-uming \
-        ttf-mscorefonts-installer \
-        fonts-dejavu \
-        fonts-liberation \        
-        fonts-opensymbol \
-        fonts-dustin \          
-        fonts-freefont-ttf \    
-        fonts-texgyre \         
-    && fc-cache -fv \      
-       # 刷新字体缓存
-    && rm -rf /var/lib/apt/lists/*
-
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 
 COPY root /
@@ -46,7 +23,7 @@ RUN echo "****** update apt-get ******" && \
     sudo cp winetricks /usr/local/bin && \
     sudo rm -rf /winetricks && \
     echo "****** install chinese fonts ******" && \
-    apt-get install -y ttf-wqy-microhei locales procps && \
+    apt-get install -y ttf-wqy-microhei fonts-noto-cjk locales procps && \
     rm -rf /var/lib/apt/lists/* && \
     sed -ie 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/g' /etc/locale.gen && \
     locale-gen && \
@@ -74,5 +51,3 @@ RUN echo "****** start xvnc ******" \
     && sudo rm -rf ~/chn_fonts.reg ~/shell
 
 USER root
-
-COPY --from=fonts /usr/share/fonts /usr/share/fonts
