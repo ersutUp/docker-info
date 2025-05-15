@@ -23,12 +23,13 @@ jobs:
       id-token: write
       #
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        id: checkout
+      - name: get wechat version
+        id: getWechatVersion
         run: |
           FULL_TAG="${GITHUB_REF#refs/tags/}"
           TAG_WECHAT_VERSION="${FULL_TAG:12}"  # 从第12位开始截取 获取微信版本号
+      - name: Checkout repository
+        uses: actions/checkout@v4
       # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -54,7 +55,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            WECHAT_VERSION=${{ steps.checkout.outputs.TAG_WECHAT_VERSION }}
+            WECHAT_VERSION=${{ steps.getWechatVersion.outputs.TAG_WECHAT_VERSION }}
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
       - name: Generate artifact attestation
