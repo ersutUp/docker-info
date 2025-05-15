@@ -1,3 +1,26 @@
+FROM ubuntu:24.04 AS fonts
+# 安装所有必要的字体包
+RUN apt-get update && \
+    apt-get install -y \
+        # 基础字体工具
+        fontconfig \
+        # 中文/东亚字体
+        fonts-wqy-zenhei \
+        fonts-wqy-microhei \
+        fonts-noto-cjk \
+        fonts-arphic-ukai \
+        fonts-arphic-uming \
+        ttf-mscorefonts-installer \
+        fonts-dejavu \
+        fonts-liberation \        
+        fonts-opensymbol \
+        fonts-dustin \          
+        fonts-freefont-ttf \    
+        fonts-texgyre \         
+    && fc-cache -fv \      
+       # 刷新字体缓存
+    && rm -rf /var/lib/apt/lists/*
+
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 
 COPY root /
@@ -51,3 +74,5 @@ RUN echo "****** start xvnc ******" \
     && sudo rm -rf ~/chn_fonts.reg ~/shell
 
 USER root
+
+COPY --from=fonts /usr/share/fonts /usr/share/fonts

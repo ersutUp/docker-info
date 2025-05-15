@@ -1,0 +1,7 @@
+version: "2.2"
+services:
+  vnc:
+    image: ghcr.io/ersutup/wine-wechat
+#    build: ./
+    ports:
+      - "39300:3000"
