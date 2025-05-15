@@ -7,7 +7,7 @@ COPY root /
 USER abc
 
 RUN echo "****** start xvnc ******" && \
-    sudo rm -f /tmp/.X1-lock /tmp/.X11-unix/X1 \
+    sudo rm -f /tmp/.X1-lock /tmp/.X11-unix/X1 && \
     # 安装微信使用的 xdotool 需要启动桌面（xvnc）
     bash -c "nohup /usr/local/bin/Xvnc $DISPLAY -interface 0.0.0.0 2>&1 &" && sleep 5 && \
     echo "****** install wechat ******" && \
