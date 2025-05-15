@@ -21,6 +21,7 @@ RUN echo "****** update apt-get ******" && \
     sudo wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && \
     sudo chmod +x winetricks && \
     sudo cp winetricks /usr/local/bin && \
+    sudo rm -rf /winetricks && \
     echo "****** install chinese fonts ******" && \
     apt-get install -y ttf-wqy-microhei locales procps && \
     rm -rf /var/lib/apt/lists/* && \
@@ -36,15 +37,17 @@ ENV LANG=zh_CN.UTF-8 \
 # 这个用户是 父镜像创建
 USER abc
 
+# 这个 RUN 避免使用 winecfg 词，因为 init-wine-cfg.sh 中会kill winecfg字眼 的线程
 RUN echo "****** start xvnc ******" \
     # 安装微信使用的 xdotool 需要启动桌面（xvnc）
     && bash -c "nohup /usr/local/bin/Xvnc $DISPLAY -interface 0.0.0.0 2>&1 &" && sleep 5 \
     && echo "****** init wine config ******" \
-    && sudo chown abc:abc /config \
+    && sudo chown -R abc:abc /config \
     && sudo chmod +x ~/shell/*.sh \
     && sudo -u abc ~/shell/init-wine-cfg.sh \
     # 安装中文字体 等
     && winetricks corefonts gdiplus riched20 riched30 wenquanyi \
-    && regedit ~/chn_fonts.reg
+    && regedit ~/chn_fonts.reg \
+    && sudo rm -rf ~/chn_fonts.reg ~/shell
 
 USER root
