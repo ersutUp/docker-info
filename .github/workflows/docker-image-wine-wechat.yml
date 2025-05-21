@@ -34,13 +34,13 @@ jobs:
         run: |
           # 判断参数来源并统一赋值
           if [ -n "${{ inputs.wechat_version }}" ]; then
-            echo "VERSION=${{ inputs.wechat_version }}" >> $GITHUB_ENV
+            echo "VERSION=${{ inputs.wechat_version }}" >> $GITHUB_OUTPUT
           elif [ -n "${GITHUB_REF#refs/tags/}" ]; then
             FULL_TAG="${GITHUB_REF#refs/tags/}"
             TAG_WECHAT_VERSION="${FULL_TAG:12}"  # 从第12位开始截取 获取微信版本号
-            echo "VERSION=${TAG_WECHAT_VERSION}" >> $GITHUB_ENV
+            echo "VERSION=${TAG_WECHAT_VERSION}" >> $GITHUB_OUTPUT
           else
-            echo "VERSION=3.9.12.51" >> $GITHUB_ENV
+            echo "VERSION=3.9.12.51" >> $GITHUB_OUTPUT
           fi
       - name: Checkout repository
         uses: actions/checkout@v4
