@@ -5,7 +5,12 @@ on:
   push:
     tags:
       - 'wine-wechat-*'
-
+  workflow_dispatch: 
+    inputs:
+      wechat_version:
+        description: 'wechat version'
+        required: true
+        default: '3.9.12.51'
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
   REGISTRY: ghcr.io
@@ -23,12 +28,20 @@ jobs:
       id-token: write
       #
     steps:
-      - name: get wechat version
-        id: getWechatVersion
+      # 统一获取参数的方法
+      - name: Set version
+        id: setVersion
         run: |
-          FULL_TAG="${GITHUB_REF#refs/tags/}"
-          TAG_WECHAT_VERSION="${FULL_TAG:12}"  # 从第12位开始截取 获取微信版本号
-          echo "TAG_WECHAT_VERSION=${TAG_WECHAT_VERSION}" >> $GITHUB_OUTPUT
+          # 判断参数来源并统一赋值
+          if [ -n "${{ inputs.wechat_version }}" ]; then
+            echo "VERSION=${{ inputs.wechat_version }}" >> $GITHUB_ENV
+          elif [ -n "${GITHUB_REF#refs/tags/}" ]; then
+            FULL_TAG="${GITHUB_REF#refs/tags/}"
+            TAG_WECHAT_VERSION="${FULL_TAG:12}"  # 从第12位开始截取 获取微信版本号
+            echo "VERSION=${TAG_WECHAT_VERSION}" >> $GITHUB_ENV
+          else
+            echo "VERSION=3.9.12.51" >> $GITHUB_ENV
+          fi
       - name: Checkout repository
         uses: actions/checkout@v4
       # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
@@ -45,7 +58,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ steps.getWechatVersion.outputs.TAG_WECHAT_VERSION }}
+            type=raw,value=v${{ steps.setVersion.outputs.VERSION }}
             type=raw,value=latest
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see [Usage](https://github.com/docker/build-push-action#usage) in the README of the `docker/build-push-action` repository.
@@ -59,7 +72,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            WECHAT_VERSION=${{ steps.getWechatVersion.outputs.TAG_WECHAT_VERSION }}
+            WECHAT_VERSION=${{ steps.setVersion.outputs.VERSION }}
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
       - name: Generate artifact attestation
