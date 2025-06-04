@@ -1,9 +1,9 @@
 version: '3' 
 services:
     eureka-server: 
-        image: eureka-server
-        build: 
-            context: ./
+        image: ghcr.io/ersutup/eureka-server
+        # build: 
+        #     context: ./
         ports:
             - "8761:8761"
         networks: 
